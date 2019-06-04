@@ -1,4 +1,4 @@
-# Cue Review 
-cuereview.co.uk - Snooker scoreboard made in 2012, written in python with web.py http://webpy.org/
+# Cue Review - 2012
+[cuereview.co.uk](https://cuereview.co.uk) - Snooker scoreboard written in python with web.py http://webpy.org/
 
 ![Screenshot](/cuereview.png)
