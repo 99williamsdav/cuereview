@@ -1,0 +1,86 @@
+body,h1,h2,h3,h4 {
+    font-family: courier;
+    /*text-transform: uppercase;*/
+}
+
+/* Topbar */
+.topbar {
+    background: url(../img/ronnie_top.jpg);
+    opacity: .8;
+    text-transform: uppercase;
+}
+.topbar h1 {
+    color: white;
+}
+.topbar .container {
+    text-align: center;
+}
+
+h1.h-big {
+  font-size: 60px!important;
+}
+.nav {
+    background-color: #E5E5E5; #525252;
+    text-transform: uppercase;
+}
+.subnav {
+    background-color: #F4F4F4;
+    font-size: 12px;
+}
+.subnav li a {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+.nav-pills .active a {
+/*color: #fff;*/
+background-color: #525252;
+}
+
+
+/* Pies */
+.jqplot-target {
+    color: white;
+}
+
+.jqplot-grid-canvas {
+    visibility: hidden;
+}
+
+/* Misc */
+tr.selected {
+    background-color: #FAFF51;
+}
+.win {
+    background-color: #96FF92;
+}
+td.inactive {
+    background-color: #F2F2F2!important; 
+    color: #A8A8A8;
+}
+
+/* Ball Colours */
+canvas.white {
+    color: #FFFBF0;
+}
+canvas.red {
+    color: #B40404;
+}
+canvas.yellow {
+    color: #D7DF01;
+}
+canvas.green {
+    color: #5FB404;
+}
+canvas.brown {
+    color: #8A4B08;
+}
+canvas.blue {
+    color: #086A87;
+}
+canvas.pink {
+    color: #F5A9A9;
+}
+canvas.black {
+    color: #2E2E2E;
+}

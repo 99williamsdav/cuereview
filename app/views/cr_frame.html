@@ -1,0 +1,43 @@
+$def with (frame={}, htmlbreaks=[])
+
+<div name="frame$frame['frame_id']">
+    <a id="frame$frame['frame_id']"></a>
+    <h2 title="id: $frame['frame_id']">Frame $frame['frame_num']</h2>
+
+    $ frame_scores = frame['frame_scores']
+    <!--<h3>$frame_scores[0]['name'] $frame_scores[0]['score'] - $frame_scores[1]['score'] $frame_scores[1]['name']</h3>-->
+
+    <div class="row">
+        <div class="col-lg-6 text-right">
+            <h3>$frame_scores[0]['name']</h3>
+        </div>
+        <div class="col-lg-6">
+            <h3>$frame_scores[1]['name']</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 text-right">
+            <h3>$frame_scores[0]['score']</h3>
+        </div>
+        <div class="col-lg-6">
+            <h3>$frame_scores[1]['score']</h3>
+        </div>
+    </div>
+    <table class="table">
+    <!--    <tr>
+            <th colspan="3" style="text-align: right">$frame_scores[0]['name']</th>
+            <th style="text-align: right">$frame_scores[0]['score']</th>
+            <th style="text-align: left">$frame_scores[1]['score']</th>
+            <th colspan="3" style="text-align: left">$frame_scores[1]['name']</th>
+        </tr>
+    -->
+        <tr class="danger" title="Foul points committed">
+            <th colspan="3">&nbsp;</th>
+            <th style="text-align: right">$frame_scores[0]['foul_points']</th>
+            <th style="text-align: left">$frame_scores[1]['foul_points']</th>
+            <th colspan="3">&nbsp;</th>
+        </tr>
+    $for htmlbreak in htmlbreaks:
+        $:htmlbreak
+    </table>
+</div>

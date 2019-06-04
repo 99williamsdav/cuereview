@@ -1,0 +1,52 @@
+$def with (vbreak={}, left=None)
+
+$ break_pots = vbreak.get('pots', [])
+
+    <tr name="break$vbreak['break_id']"
+        $if vbreak['foul_num'] is not None:
+                class="danger"
+        >
+
+        $if left is None:
+            <!-- break and score only-->
+            <td>
+            $for pot in break_pots:
+                $:ball_img(pot['name'], size=None, title=pot['points'])
+            </td>
+            <td>$vbreak['score']</td>
+        $elif left:
+            <td class="text-right" style="width: 35%">
+            $for pot in break_pots:
+                $:ball_img(pot['name'], size=None, title=pot['points'])
+            </td>
+
+            <td class="text-right">$vbreak['score']</td>
+
+            <td class="text-right">
+            $if vbreak['foul_num'] is not None:
+                foul
+            </td>
+            <!--<td>$vbreak['player_name']</td>-->
+            <td class="text-right"><strong>$vbreak['frame_score']<strong></td>
+
+            <!--symmetry-->
+            <td class="inactive text-left"><strong>$vbreak['opp_frame_score']<strong></td>
+            <td colspan="3" class="inactive">&nbsp;<a id="break$vbreak['break_id']"></a></td>
+        $else:
+            <!--symmetry-->
+            <td colspan="3" class="inactive">&nbsp;<a id="break$vbreak['break_id']"></a></td>
+            <td class="inactive text-right"><strong>$vbreak['opp_frame_score']<strong></td>
+
+            <td class="text-left"><strong>$vbreak['frame_score']<strong></td>
+            <!--<td>$vbreak['player_name']</td>-->
+            <td class="text-left">
+            $if vbreak['foul_num'] is not None:
+                foul
+            </td>
+            <td class="text-left">$vbreak['score']</td>
+
+            <td class="text-left" style="width: 35%">
+            $for pot in break_pots:
+                $:ball_img(pot['name'], size=None, title=pot['points'])
+            </td>
+    </tr>

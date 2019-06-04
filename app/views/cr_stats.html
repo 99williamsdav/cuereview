@@ -1,0 +1,209 @@
+$def with (players=[], ball_stats={}, balls=[], d='')
+
+<script type="text/javascript">
+    var popover = false;
+
+    $$(document).ready(function(){
+
+        // Show break in popover when it's hovered over
+        $$("[rel=popover]").hover(function() {
+            var e=$$(this);
+            popover = true;
+
+            $$.get(
+                    e.data('url'),
+                    function(response){
+                        $$("[rel=popover]").popover('destroy')
+                        if (popover) {
+                            e.popover({content: response, html: true}).popover('show');
+                            drawBalls();
+                        }
+                    }
+                )
+            }, function () {
+                popover = false;
+                $$("[rel=popover]").popover('destroy')
+            }
+        );
+
+
+        // Draw pie charts
+        var ball_colours = [
+            $for ball in balls:
+                '${ball['colour']}',
+            ];
+
+        var ball_data = [
+            $for ball in balls:
+                ['${ball['name']}', ${ball_stats[ball['name']+'_avg_points']}],
+            ];
+        var total_ball_plot = jQuery.jqplot ('total_balls_pie', [ball_data], { 
+                seriesColors: ball_colours,
+                seriesDefaults: { shadow: false, renderer: jQuery.jqplot.PieRenderer, rendererOptions: { showDataLabels: true, highlightMouseOver : false, padding : 0 } }
+            }
+        );
+        $for player in players:
+            ball_data = [
+                $for ball in balls:
+                    ['${ball['name']}', ${player[ball['name']+'_avg_points']}],
+                ];
+            var ${player['name']}_ball_plot = jQuery.jqplot ('${player['name']}_balls_pie', [ball_data], { 
+                    seriesColors: ball_colours,
+                    seriesDefaults: { shadow: false, renderer: jQuery.jqplot.PieRenderer, rendererOptions: { showDataLabels: true, highlightMouseOver : false, padding : 0 } }
+                }
+            );
+    });
+</script>
+
+
+<!--
+<ul class="nav nav-pills">
+    $ title = "Upload Match"
+    <li
+    $if title == 'Upload Match':
+        class="active"
+    ><a href="$cgi()/stats">Players</a></li>
+    <li
+    $if title == 'Matches':
+        class="active"
+    ><a href="$cgi()/stats/breaks">Breaks</a></li>
+    <li
+    $if title == 'Matches':
+        class="active"
+    ><a href="$cgi()/stats/balls">Balls</a></li>
+</ul>
+-->
+
+<ul class="nav nav-pills subnav nav-justified">
+$for duration, label in [('week', 'week'), ('month', 'month'), ('threemonths', '3 months'), ('sixmonths', '6 months'), ('year', 'year'), ('', 'all time')]:
+    <li
+    $if d == duration:
+        class="active"
+    ><a href="$cgi()/stats?d=$duration">$label</a></li>
+</ul>
+
+<table class="table table-striped">
+    <tr>
+        <th>&nbsp;</th>
+        <th colspan="4">Matches</th>
+        <th>&nbsp;</th>
+        <th colspan="4">Frames</th>
+        <th>&nbsp;</th>
+        <th colspan="2">Per Frame</th>
+        <th>&nbsp;</th>
+        <th colspan="2">Breaks</th>
+        <th>&nbsp;</th>
+        <th colspan="2">Frame Records</th>
+        <th>&nbsp;</th>
+        <th colspan="$len(balls)">Balls Potted</th>
+        <th>&nbsp;</th>
+        <th colspan="$len(balls)">Ball Pots Per Frame</th>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <th title="matches played">P</th>
+        <th title="matches won">W</th>
+        <th title="matches lost">L</th>
+        <th title="match win %">%</th>
+        <th>&nbsp;</th>
+        <th title="frames played">P</th>
+        <th title="frames won">W</th>
+        <th title="frames lost">L</th>
+        <th title="frame win %">%</th>
+        <th>&nbsp;</th>
+        <th title="points/frame">Pts</th>
+        <th title="fouls/frame">Fls</th>
+        <th>&nbsp;</th>
+        <th title="highest break">Highest</th>
+        <th title="longest break">Longest</th>
+        <th>&nbsp;</th>
+        <th title="best frame score">Score</th>
+        <th title="most fouls in a frame">Fouls</th>
+        <th>&nbsp;</th>
+        $for ball in balls:
+            <th>$:ball_img(ball['name'], size='20', title=ball['name'])</th>
+        <th>&nbsp;</th>
+        $for ball in balls:
+            <th>$:ball_img(ball['name'], size='20', title=ball['name']+" Per Frame")</th>
+    </tr>
+$for player in players:
+    <tr>
+        <td title="$player['elo']"><a href="#$player['name']">$player['name']</a></td>
+        <td>$player['matches_played']</td>
+        <td>$player['wins']</td>
+        <td>$player['losses']</td>
+        <td>$player['percentage']</td>
+        <td>&nbsp;</td>
+        <td>$player['frames_played']</td>
+        <td>$player['frame_wins']</td>
+        <td>$player['frame_losses']</td>
+        <td>$player['frame_percentage']</td>
+        <td>&nbsp;</td>
+        <td>$player['ppf']</td>
+        <td>$player['fpf']</td>
+        <td>&nbsp;</td>
+        <td>
+            <a href="$cgi()/matches/$player['highest_break']['match_id']#break$player['highest_break']['break_id']" class="btn btn-default" 
+                data-url="$cgi()/breaks/$player['highest_break']['break_id']" title="$:format_date(player['highest_break']['date'])" rel="popover">
+                $player['highest_break']['score']
+            </a>
+        </td>
+        <td>
+            <a href="$cgi()/matches/$player['longest_break']['match_id']#break$player['longest_break']['break_id']" class="btn btn-default" 
+                data-url="$cgi()/breaks/$player['longest_break']['break_id']" title="$:format_date(player['longest_break']['date'])" rel="popover">
+                $player['longest_break']['length']
+            </a>
+        </td>
+        <td>&nbsp;</td>
+        <td>
+            <a href="$cgi()/matches/$player['best_score']['match_id']#frame$player['best_score']['frame_id']" class="btn btn-default" 
+                data-url="$cgi()/frames/$player['best_score']['frame_id']" title="$:format_date(player['best_score']['date'])" rel="popover">
+                $player['best_score']['score']
+            </a>
+        </td>
+        <td>
+            <a href="$cgi()/matches/$player['most_fouls']['match_id']#frame$player['most_fouls']['frame_id']" class="btn btn-default" 
+                data-url="$cgi()/frames/$player['most_fouls']['frame_id']" title="$:format_date(player['most_fouls']['date'])" rel="popover">
+                $player['most_fouls']['foul_points']
+            </a>
+        </td>
+        <td>&nbsp;</td>
+        $for ball in balls:
+            <td>$player[ball['name']+'_total']</td>
+        <td>&nbsp;</td>
+        $for ball in balls:
+            <td title="$player[ball['name']+'_avg_points'] points per frame">$player[ball['name']+'_avg']</td>
+    </tr>
+<!--end loop-->
+    <tr style="font-weight:bold;">
+        <td>Overall</td>
+        <td colspan="19">&nbsp;</td>
+        $for ball in balls:
+            <td>$ball_stats[ball['name']+'_total']</td>
+        <td>&nbsp;</td>
+        $for ball in balls:
+            <td title="$ball_stats[ball['name']+'_avg_points'] points per frame">$ball_stats[ball['name']+'_avg']</td>
+    </tr>
+</table>
+
+<h2>Where do points come from?</h2>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Average</h3>
+                </div>
+                <div class="panel-body" id="total_balls_pie"></div>
+            </div>
+        </div>
+
+    $for player in players:
+        <div class="col-lg-3">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a id="$player['name']">$player['name']</a></h3>
+                </div>
+                <div class="panel-body" id="${player['name']}_balls_pie"></div>
+            </div>
+        </div>
+    </div>

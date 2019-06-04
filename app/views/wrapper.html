@@ -1,0 +1,86 @@
+$def with (page, title='', favicon='black', cookies=[], breadcrumbs=[], error='')
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>$get_name()  $title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="SHORTCUT ICON" href="$cgi()/static/img/${favicon}.ico">
+
+    <link rel="stylesheet" type="text/css" href="$cgi()/static/css/bootstrap3.min.css" />
+    <!--<link rel="stylesheet" type="text/css" href="$cgi()/static/css/bootstrap-responsive.min.css" />-->
+    <link rel="stylesheet" type="text/css" href="$cgi()/static/css/jquery.jqplot.min.css" />
+    <link rel="stylesheet" type="text/css" href="$cgi()/static/css/custom.css" />
+    
+
+    <!--<script type="text/javascript" src="$cgi()/static/js/jquery.min.js"></script>-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="$cgi()/static/js/jqplot/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="$cgi()/static/js/jqplot/jqplot.pieRenderer.min.js"></script>
+    <script type="text/javascript" src="$cgi()/static/js/jqplot/jqplot.donutRenderer.min.js"></script>
+    <script type="text/javascript" src="$cgi()/static/js/bootstrap3.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-41813904-3', 'cuereview.co.uk');
+  ga('send', 'pageview');
+</script>
+
+<script type="text/javascript">
+    $$(document).ready(function(){
+        drawBalls();
+    });
+
+    // Draw snooker balls on relevant canvases
+    function drawBalls() {
+        $$('.ball').each(function(i, canvas) {
+            var context = canvas.getContext('2d');
+            var radius = canvas.width / 2;
+            var color = $$(canvas).css('color');
+
+            context.beginPath();
+            context.arc(radius, radius, radius, 0, 2 * Math.PI, false);
+            context.fillStyle = color;
+            context.fill();
+        })
+    }
+</script>
+
+</head>
+
+<body>
+    
+    <header class="topbar" id="overview">
+        <div class="container">
+            <a class="brand" href="$cgi()"><h1>CUE REVIEW!</h1></a>
+        </div>
+    </header>
+    <ul class="nav nav-pills nav-justified">
+    $for url, label in [('upload', 'Upload'), ('matches', 'Matches'), ('stats', 'Players')]:
+        <li
+        $if title == label:
+            class="active"
+        ><a href="$cgi()/$url">$label</a></li>
+    </ul>
+<!--
+    <ul class="breadcrumb">
+        <li><a href="$cgi()">$get_name()</a></li>
+        $for url, name in breadcrumbs:
+            <li><span class="divider">></span><a href="$cgi()/$url">$name</a></li>
+    </ul>
+-->
+    $if error != "":
+        <h2>ERROR: $error</h2>
+
+    <div id="content">
+        $:page
+    </div> <!-- content ends -->
+
+</body>
+
+</html>

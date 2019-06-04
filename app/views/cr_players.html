@@ -1,0 +1,63 @@
+$def with (players=[], balls=[])
+
+<table style="text-align: center; border-spacing: 15px" >
+    <tr>
+        <th>&nbsp;</th>
+        <th colspan="4">Matches</th>
+        <th>&nbsp;</th>
+        <th colspan="4">Frames</th>
+        <th>&nbsp;</th>
+        <th colspan="4">Record</th>
+        <th>&nbsp;</th>
+        <th colspan="$len(balls)">Balls Potted</th>
+        <th>&nbsp;</th>
+        <th colspan="$len(balls)">Ball Pots Per Frame</th>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <th title="matches played">P</th>
+        <th title="matches won">W</th>
+        <th title="matches lost">L</th>
+        <th title="match win %">%</th>
+        <th>&nbsp;</th>
+        <th title="frames played">P</th>
+        <th title="frames won">W</th>
+        <th title="frames lost">L</th>
+        <th title="frame win %">%</th>
+        <th>&nbsp;</th>
+        <th title="points/frame">Pts/f</th>
+        <th title="fouls/frame">Fls/f</th>
+        <th title="highest break">Highest Brk</th>
+        <th title="most fouls in a frame">Most fouls</th>
+        <th>&nbsp;</th>
+        $for ball in balls:
+            <th>$:ball_img(ball['name'])</th>
+        <th>&nbsp;</th>
+        $for ball in balls:
+            <th>$:ball_img(ball['name'])</th>
+    </tr>
+$for player in players:
+    <tr>
+        <td><a href="$player_url(player['name'])">$player['name']</a></td>
+        <td>$player['matches_played']</td>
+        <td>$player['wins']</td>
+        <td>$player['losses']</td>
+        <td>$player['percentage']</td>
+        <td>&nbsp;</td>
+        <td>$player['frames_played']</td>
+        <td>$player['frame_wins']</td>
+        <td>$player['frame_losses']</td>
+        <td>$player['frame_percentage']</td>
+        <td>&nbsp;</td>
+        <td>$player['ppf']</td>
+        <td>$player['fpf']</td>
+        <td>$player['highest_break']['score']</td>
+        <td>$player['most_fouls']</td>
+        <td>&nbsp;</td>
+        $for ball in balls:
+            <td>$player[ball['name']+'_total']</td>
+        <td>&nbsp;</td>
+        $for ball in balls:
+            <td title="$player[ball['name']+'_avg_points'] points per frame">$player[ball['name']+'_avg']</td>
+    </tr>
+</table>

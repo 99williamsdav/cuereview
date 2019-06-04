@@ -1,0 +1,22 @@
+$def with (matches=[])
+
+<div class="row">
+    <!--assumes only two players-->
+    $for match in matches:
+        $ match_scores = match['match_scores']
+        $if len(match_scores) == 2:
+            <div class="col-lg-4">
+                <table class="table table-condensed">
+                    <tr
+                    $if match['confirmed'] == 'N':
+                        class="danger"
+                    >
+                        <td><a href="$match_url(match['match_id'])">$match['pretty_date']</a></td>
+                        <td><a href="$player_url(match_scores[0]['name'])">$match_scores[0]['name']</a></td>
+                        <td>$match_scores[0]['frames_won']</td>
+                        <td>$match_scores[1]['frames_won']</td>
+                        <td><a href="$player_url(match_scores[1]['name'])">$match_scores[1]['name']</a></td>
+                    </tr>
+                </table>
+            </div>
+</div>

@@ -1,0 +1,95 @@
+$def with (match={}, htmlframes=[])
+
+<script type="text/javascript">
+    $$(document).ready(function(){
+        // Highlight whichever break or frame is anchored
+        id=window.location.hash.replace('#', '');
+        if (id.indexOf("break") != -1) {
+            $$('[name="'+id+'"]').addClass('selected');
+        } else if (id.indexOf("frame") != -1) {
+            $$('[name="'+id+'"]').addClass('well well-sm');
+        }
+        
+    });
+</script>
+
+$if match['confirmed'] == 'N':
+    <!--div class="alert">
+        This match has not been verified. Is the information below correct?
+        <a class="btn btn-default" href="#">Commit</a>
+        <a class="btn btn-danger" href="#">Rollback</a>
+    </div-->
+
+$ match_scores = match.get('match_scores', [])
+
+<h2 class="text-center">$:format_date(match['date'])</h2>
+<h1 class="h-big text-center">$match_scores[0]['name'] vs $match_scores[1]['name']</h1>
+<h3 class="text-center">$match['headline']</h3>
+
+$for stat in match['stats']:
+    <h4 class="text-center">$stat</h4>
+
+<div class="row">
+    <div class="col-12 col-lg-4 col-lg-offset-4">
+        <table class="table">
+            <tr><th colspan="$len(match_scores)">$match['pretty_date']</th></tr>
+            <tr>
+            $for match_score in match_scores:
+                <td><a href="$player_url(match_score['name'])">$match_score['name']</a></td>
+            <!--end loop-->
+            </tr>
+            <tr>
+            $for match_score in match_scores:
+                <td
+                    $if match_score['won']:
+                        class="win"
+                >$match_score['frames_won']</td>
+            <!--end loop-->
+            </tr>
+            $ i=0
+            $for frame in match['frames']:
+                $ i += 1
+                <tr><th colspan="$len(match_scores)">Frame $frame['frame_num']</th></tr>
+                <tr>
+                $for frame_score in frame['frame_scores']:
+                    <td
+                        $if frame_score['won']:
+                            class="win"
+                    >$frame_score['score']</td>
+                <!--end loop-->
+                </tr>
+                <tr class="danger">
+                $for frame_score in frame['frame_scores']:
+                    <td title="fouls committed">$frame_score['foul_points']</td>
+                <!--end loop-->
+                </tr>
+            <!--end loop-->
+            <tr><th colspan="$len(match_scores)">Total</th></tr>
+            <tr>
+            $for match_score in match_scores:
+                <td
+                    $if match_score['won']:
+                        class="win"
+                >$match_score['total_points']</td>
+            <!--end loop-->
+            </tr>
+        </table>
+    </div>
+</div>
+<hr>
+
+$ frame_width = 12 / len(match['frames'])
+$ offset = 0
+$if frame_width < 3:
+    $ frame_width = 3
+$elif frame_width == 12:
+    $ frame_width = 6
+    $ offset = 3
+
+<div class="row">
+$for htmlframe in htmlframes:
+    <div class="col-12 col-lg-$frame_width col-lg-offset-$offset">
+        $:htmlframe
+    </div>
+</div>
+
